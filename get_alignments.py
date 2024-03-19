@@ -57,3 +57,12 @@ def run_usalign(pdb_path, usalign_path, parallel):
             # clean protein names and do sanity check of the alignment size
             clean_pro_name_in_align(align_file_path, pdb_file, size_align)
             size_align -= 1
+    # if not parallel
+    else:
+        _, pdb_list_path = get_lists.get_pdblist_all(path)
+        align_file = 'align_all.txt'
+        align_file_path = os.path.join(align_folder_path, align_file)
+        usalign_cmd = usalign_path + ' -dir ' + pdb_path + ' ' + pdb_list_path  + \
+                      ' -outfmt 2 >> ' + align_file_path
+        os.system(usalign_cmd)
+    def cat_align(pdb_path)

@@ -13,7 +13,7 @@ def get_pdblist_all(path):
     prj_path = os.path.dirname(path)
     pdb_list_path = os.path.join(prj_path, 'pdb_list.txt')
     pdb_list.to_csv(pdb_list_path, header=None, index=None)
-    return pdb_list
+    return pdb_list, pdb_list_path
 
 def generate_sub_lists(path):
     """generate sub-lists of .pdb files for running structure alignment parallelly."""
@@ -27,7 +27,7 @@ def generate_sub_lists(path):
         os.makedirs(list_folder_path)
         print('Folder for sub-lists of pdb files does not exist, generated!')
     # get the list of all .pdb files, this is one of the outputs
-    df_all = get_pdblist_all(path)
+    df_all, _ = get_pdblist_all(path)
     # copy of the overall list
     df4loop = copy.deepcopy(df_all)
     # save the list, then pop one file name out, save again, get all sub-lists in the end
