@@ -59,10 +59,23 @@ def run_usalign(pdb_path, usalign_path, parallel):
             size_align -= 1
     # if not parallel
     else:
-        _, pdb_list_path = get_lists.get_pdblist_all(path)
+        pdb_list, pdb_list_path = get_lists.get_pdblist_all(pdb_path)
         align_file = 'align_all.txt'
         align_file_path = os.path.join(align_folder_path, align_file)
         usalign_cmd = usalign_path + ' -dir ' + pdb_path + ' ' + pdb_list_path  + \
                       ' -outfmt 2 >> ' + align_file_path
         os.system(usalign_cmd)
-    def cat_align(pdb_path)
+    return pdb_list, align_folder_path
+def cat_align(pdb_path, usalign_path):
+    """If the alignments are computed parallelly, concatenate them."""
+    pdb_list, align_folder_path = run_usalign(pdb_path, usalign_path, 1)
+    alignment1 = 'align_' + str(pdb_list[0].iloc[0][3:-4]) + '.txt'
+    path1 = os.path.join(align_folder_path, alignment1)
+    df_all = pd.read_csv(path1, sep='\t')
+    for pdb_file in pdb_list[0]:
+        alignment2 = 'align' + str(df_list_all[0].iloc[ind_align][3:-4]) + '.txt'
+        path2 = os.path.join(datamining_folder, prjfolder, align_folder, alignment2)
+        df_2 = pd.read_csv(path2, sep='\t')
+        length_sanity = length_sanity - 1
+        sanitycheck(df_2, length_sanity, alignment2)
+        df_all = pd.concat([df_all, df_2])
