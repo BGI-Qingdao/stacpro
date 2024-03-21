@@ -2,12 +2,14 @@ import os
 import get_lists
 import pandas as pd
 
+
 def sanitycheck(df, size, alignment_title):
     """Sanity check of the size of alignment files, number of rows should be same as
     the corresponding sub-list file."""
     if len(df.axes[0]) != size:
         print(alignment_title, 'did not pass sanitycheck, the size needed is:', size,
               ', but the exist size is:', len(df.axes[0]))
+
 
 def clean_pro_name_in_align(align_file_path, pdb_file, size_align):
     """Rename first two columns. The previous first column values are pdb file names with path. We keep the file names
@@ -20,6 +22,7 @@ def clean_pro_name_in_align(align_file_path, pdb_file, size_align):
     df_align['PDBchain1'] = pdb_file[:-4]
     sanitycheck(df_align, size_align, align_file_path)
     df_align.to_csv(align_file_path, index=None, sep='\t')
+
 
 def run_usalign(pdb_path, usalign_path, parallel):
     """Run us-align to compute the pair-wise similarity of structures"""
@@ -60,16 +63,18 @@ def run_usalign(pdb_path, usalign_path, parallel):
     # if not parallel
     else:
         pdb_list, pdb_list_path = get_lists.get_pdblist_all(pdb_path)
-        align_file = 'align_all.txt'
+        align_file = 'alignment_all.txt'
         align_file_path = os.path.join(align_folder_path, align_file)
         usalign_cmd = usalign_path + ' -dir ' + pdb_path + ' ' + pdb_list_path  + \
                       ' -outfmt 2 >> ' + align_file_path
         os.system(usalign_cmd)
-    return pdb_list, align_folder_path
+    return pdb_list, align_folder_path, align_file_path
+
+
 def cat_align(pdb_path, usalign_path):
     """If the alignments are computed parallelly, concatenate them."""
     # get pdb_list and folder path of sub-alignments
-    pdb_list, align_folder_path = run_usalign(pdb_path, usalign_path, 1)
+    pdb_list, align_folder_path, _ = run_usalign(pdb_path, usalign_path, 1)
     # for each sub-alignments, concatenate it to the full alignments
     for pdb_file in pdb_list[0]:
         try:
@@ -83,3 +88,13 @@ def cat_align(pdb_path, usalign_path):
             df_align_all = pd.read_csv(path1, sep='\t')
     align_all_path = os.path.join(align_folder_path, 'alignment_all.txt')
     df_align_all.to_csv(align_all_path, index=None, sep='\t')
+    return align_all_path
+
+
+def compute_similarity(pdb_path, usalign_path, parallel):
+    """This is a function to generate the pair-wise similarity matrix"""
+    if parallel:
+        align_all_path = cat_align(pdb_path, usalign_path)
+    else:
+        _, _, align_all_path = run_usalign(pdb_path, usalign_path, parallel)
+    print('Pair-wise similarity computed, saved in: ', align_all_path)
