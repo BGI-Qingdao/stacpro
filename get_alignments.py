@@ -72,13 +72,14 @@ def cat_align(pdb_path, usalign_path):
     pdb_list, align_folder_path = run_usalign(pdb_path, usalign_path, 1)
     # for each sub-alignments, concatenate it to the full alignments
     for pdb_file in pdb_list[0]:
-        if df_align_all in locals():
-            alignment2 = 'align' + str(df_list_all[0].iloc[ind_align][3:-4]) + '.txt'
+        try:
+            alignment2 = 'align_' + pdb_file[:-3] + 'txt'
             path2 = os.path.join(align_folder_path, alignment2)
             df_2 = pd.read_csv(path2, sep='\t')
             df_align_all = pd.concat([df_align_all, df_2])
-        else:
-            alignment1 = 'align_' + str(pdb_list[0].iloc[0][3:-4]) + '.txt'
+        except:
+            alignment1 = 'align_' + pdb_file[:-3] + 'txt'
             path1 = os.path.join(align_folder_path, alignment1)
             df_align_all = pd.read_csv(path1, sep='\t')
     align_all_path = os.path.join(align_folder_path, 'alignment_all.txt')
+    df_align_all.to_csv(align_all_path, index=None, sep='\t')
