@@ -1,4 +1,5 @@
 """this is an example to run on 192.168.66.203"""
+"""note: the protein IDs should not contain '(' or ')'"""
 import get_alignments
 pdb_path = '/dellfsqd2/ST_OCEAN/USER/wangdantong/python_toolbox_test/stacpro/pdb_files'
 us_path = '/dellfsqd2/ST_OCEAN/USER/wangdantong/toolboxes/usalign/USalign/USalign'
