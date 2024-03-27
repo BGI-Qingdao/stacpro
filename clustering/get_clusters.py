@@ -125,7 +125,7 @@ def get_tree_file(path_similarity, method='nj', tm_score='average', path_tree_fo
     file_tree.close()
 
     if plot:
-        if method = 'upgma':
+        if method == 'upgma':
             fig_save_path = os.path.join(path_tree_folder, 'treeplot.png')
             fig, ax = tree_functions.plot_tree(clust_num, name_all, labels, distances)
             fig.savefig(fig_save_path)
