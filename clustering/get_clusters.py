@@ -1,16 +1,12 @@
-import pandas as pd
-import numpy as np
-import copy
-import random
 import clustering.tree_functions as tree_functions
 import os
 
 
-def get_tree_file(path_similarity, method='nj', path_tree_folder = 0, tree_name = 0, plot=0, clust_num=3):
+def get_tree_file(path_similarity, method='nj', tm_score='average', path_tree_folder = 0, tree_name = 0, plot=0, clust_num=3):
     """This is a function to generate a .nwk file, which can be uploaded to "https://itol.embl.de/"
     to plot and edit the tree plot"""
     # reform the pair-wise similarity form to a similarity matrix
-    mat, df_pro_uni = tree_functions.align2mat(path_similarity)
+    mat, df_pro_uni = tree_functions.align2mat(path_similarity, tm_score=tm_score)
     # get the nearest proteins and update the similarity matrix
     if method == 'upgma':
         mat_new, row, col, min_dis = tree_functions.update_mat_upgma(mat, df_pro_uni.size - 1)

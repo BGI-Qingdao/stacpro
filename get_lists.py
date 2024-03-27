@@ -1,8 +1,24 @@
 import copy
 import pandas as pd
 import os
-def get_pdblist_all(path):
-    """get a list of all .pdb files in the provided folder."""
+
+
+def get_pdblist_all(path, pdb_list_path = None):
+    """get a list of all .pdb files in the provided folder.
+    Parameters:
+    ----------
+    path: string
+        Path of the folder containing all .pdb files for alignment and clustering.
+    pdb_list_path: sting
+        Path where to save the generated list of all .pdb files. If provided, it should be end with
+        a name of .txt file (e.g. PATH/list_pdb.txt)
+    Returns:
+    ----------
+    pdb_list: pandas dataframe
+        A list of all .pdb file names.
+    pdb_list_path: string
+        Path of the generated .txt file containing all .pdb file names"""
+    # initialization of pdb list
     pdb_list = []
     # loop over all files in the folder, if it is .pdb file, then add it to the list
     for file in os.listdir(path):
@@ -11,21 +27,38 @@ def get_pdblist_all(path):
     pdb_list = pd.DataFrame(pdb_list)
     # save the list in the same path as the file contains all .pdb files
     prj_path = os.path.dirname(path)
-    pdb_list_path = os.path.join(prj_path, 'pdb_list.txt')
+    if pdb_list_path is None:
+        pdb_list_path = os.path.join(prj_path, 'pdb_list.txt')
     pdb_list.to_csv(pdb_list_path, header=None, index=None)
     return pdb_list, pdb_list_path
 
-def generate_sub_lists(path):
-    """generate sub-lists of .pdb files for running structure alignment parallelly."""
-    # get path for the sub-lists
-    prjfolder = os.path.dirname(path)
-    list_folder = 'sublists'
-    list_folder_path = os.path.join(prjfolder, list_folder)
-    # if the folder for sub-lists is not present
-    if not os.path.exists(list_folder_path):
-        # then create it.
-        os.makedirs(list_folder_path)
-        print('Folder for sub-lists of pdb files does not exist, generated!')
+
+def generate_sub_lists(path, list_folder_path = None):
+    """generate sub-lists of .pdb files for running structure alignment in parallel.
+    Parameters:
+    ----------
+    path: string
+        Path of the folder containing all .pdb files for alignment and clustering.
+    list_folder_path: sting
+        Folder path where to save the generated sub-lists for computing protein similarity
+        in parallel.
+    Returns:
+    ----------
+    df_all: pandas dataframe
+         A list of all .pdb file names.
+    list_folder_path: string
+        Folder path where to save the generated sub-lists for computing protein similarity
+        in parallel, if not provided, this is in the same path as the pdb folder."""
+    if list_folder_path is None:
+        # get path for the sub-lists
+        prjfolder = os.path.dirname(path)
+        list_folder = 'sublists'
+        list_folder_path = os.path.join(prjfolder, list_folder)
+        # if the folder for sub-lists is not present
+        if not os.path.exists(list_folder_path):
+            # then create it.
+            os.makedirs(list_folder_path)
+            print('Folder for sub-lists of pdb files does not exist, created!')
     # get the list of all .pdb files, this is one of the outputs
     df_all, _ = get_pdblist_all(path)
     # copy of the overall list
