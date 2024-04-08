@@ -3,6 +3,16 @@ import pandas as pd
 import os
 
 
+def get_lists(path,
+              pdb_list_path=None,
+              list_folder_path=None,
+              parallel=0):
+    if parallel:
+        pdb_list, pdb_list_path = generate_sub_lists(path, list_folder_path=list_folder_path)
+    else:
+        pdb_list, pdb_list_path = get_pdblist_all(path, pdb_list_path = pdb_list_path)
+    return pdb_list, pdb_list_path
+
 def get_pdblist_all(path, pdb_list_path = None):
     """get a list of all .pdb files in the provided folder.
     Parameters:

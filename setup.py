@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import setuptools
+import glob
+import os
 
 setuptools.setup(
     name="stacpro",
@@ -21,8 +23,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     license="GPL-3.0+",
-    description="Structure based alignment and clustering of protein.",
+    description="Structure based alignment and clustering of proteins.",
     platforms='any',
-        ],
-    },
 )

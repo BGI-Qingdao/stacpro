@@ -2,7 +2,8 @@ import clustering.tree_functions as tree_functions
 import os
 
 
-def get_tree_file(path_similarity, method='nj', tm_score='average', path_tree_folder = 0, tree_name = 0, plot=0, clust_num=3):
+def get_tree_file(path_similarity, method='nj', tm_score='average', path_tree_folder=None, tree_name=None, plot=0,
+                  clust_num=3, clust_save_path=None):
     """This is a function to generate a .nwk file, which can be uploaded to "https://itol.embl.de/"
     to plot and edit the tree plot"""
     # reform the pair-wise similarity form to a similarity matrix
@@ -109,9 +110,9 @@ def get_tree_file(path_similarity, method='nj', tm_score='average', path_tree_fo
                                                     name_distances, pro_pre_dis, pro_post_dis)
         name_all.pop(col + 1)
         name_distances.pop(col + 1)
-    if not tree_name:
+    if tree_name is None:
         tree_name = 'tree_' + method + '.nwk'
-    if not path_tree_folder:
+    if path_tree_folder is None:
         alignfolder = os.path.dirname(path_similarity)
         path_tree_folder = os.path.join(alignfolder, 'trees')
         # if the folder for .nwk file is not present
@@ -129,6 +130,10 @@ def get_tree_file(path_similarity, method='nj', tm_score='average', path_tree_fo
             fig_save_path = os.path.join(path_tree_folder, 'treeplot.png')
             fig, ax = tree_functions.plot_tree(clust_num, name_all, labels, distances)
             fig.savefig(fig_save_path)
+            return save_tree_path, fig_save_path, clust_save_path
         else:
             print('Sorry, we only support the printing of simple tree plot using UPGMA method, update'
                   'will come later, thank you for your understanding!')
+        return save_tree_path, clust_save_path
+    else:
+        return save_tree_path, clust_save_path
