@@ -1,4 +1,5 @@
 import copy
+import numpy as np
 import pandas as pd
 import os
 
@@ -6,11 +7,11 @@ import os
 def get_lists(path,
               pdb_list_path=None,
               list_folder_path=None,
-              parallel=0):
+              parallel=0, par_num=5):
     if parallel:
-        pdb_list, pdb_list_path = generate_sub_lists(path, list_folder_path=list_folder_path)
+        pdb_list, pdb_list_path = generate_sub_lists(path, list_folder_path=list_folder_path, par_num=par_num)
     else:
-        pdb_list, pdb_list_path = get_pdblist_all(path, pdb_list_path = pdb_list_path)
+        pdb_list, pdb_list_path = get_pdblist_all(path, pdb_list_path=pdb_list_path)
     return pdb_list, pdb_list_path
 
 def get_pdblist_all(path, pdb_list_path = None):
@@ -43,7 +44,7 @@ def get_pdblist_all(path, pdb_list_path = None):
     return pdb_list, pdb_list_path
 
 
-def generate_sub_lists(path, list_folder_path = None):
+def generate_sub_lists(path, list_folder_path=None, par_num=None):
     """generate sub-lists of .pdb files for running structure alignment in parallel.
     Parameters:
     ----------
@@ -79,4 +80,13 @@ def generate_sub_lists(path, list_folder_path = None):
         txt_path = os.path.join(list_folder_path, txt_name)
         df4loop[0].pop(i_file)
         df4loop[0].to_csv(txt_path, header=None, index=None)
+    sub_pdb_list_size = int(np.floor(df_all.size/par_num))
+    for ind_par_num in range(par_num):
+        if ind_par_num == par_num - 1:
+            sub_df_all = df_all[ind_par_num * sub_pdb_list_size:]
+        else:
+            sub_df_all = df_all[ind_par_num * sub_pdb_list_size:ind_par_num * sub_pdb_list_size + sub_pdb_list_size]
+        par_list = 'pdb_list' + str(ind_par_num) + '.txt'
+        parlist_file_path = os.path.join(list_folder_path, par_list)
+        sub_df_all.to_csv(parlist_file_path, header=None, index=None)
     return df_all, list_folder_path
