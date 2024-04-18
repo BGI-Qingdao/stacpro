@@ -145,10 +145,6 @@ def cat_align(pdb_path, usalign_path, par_index=None,
     align_all_path: string
         Path of the final pair-wise similarity matrix.
     """
-    # get pdb_list and folder path of sub-alignments
-    pdb_list, align_folder_path, _ = run_usalign(pdb_path, usalign_path, 1, par_index=par_index,
-                                                 par_num=par_num, align_folder_path=align_folder_path,
-                                                 pdb_list=pdb_list, sublist_path=sublist_path)
     # for each sub-alignments, concatenate it to the full alignments
     for pdb_file in pdb_list[0]:
         try:
@@ -187,12 +183,15 @@ def compute_similarity(pdb_path, usalign_path, parallel=0, par_index=None,
         Path of the final pair-wise similarity matrix."""
     # if compute similarity in parallel, concatenate the individual alignments
     if parallel:
+        print('Computing all alignments in parallel, use the function "cat_align" to concatenate them after all '
+              'computations are finished.')
         if par_index is None:
             print('The index of parallel is not specified, computing for par_index=0.')
-            par_indedjobdxi = 1
-        align_all_path = cat_align(pdb_path, usalign_path, par_index=par_index,
-                                   par_num=par_num, align_folder_path=align_folder_path, align_file=align_file,
-                                   pdb_list=pdb_list, sublist_path=sublist_path)
+            par_index = 0
+        # get pdb_list and folder path of sub-alignments
+        pdb_list, align_folder_path, _ = run_usalign(pdb_path, usalign_path, 1, par_index=par_index,
+                                                     par_num=par_num, align_folder_path=align_folder_path,
+                                                     pdb_list=pdb_list, sublist_path=sublist_path)
     # in the similarity is not computed in parallel, simplly do us-align
     else:
         _, _, align_all_path = run_usalign(pdb_path, usalign_path, 0, par_index=None,
