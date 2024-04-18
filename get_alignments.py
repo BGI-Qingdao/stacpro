@@ -123,6 +123,9 @@ def run_usalign(pdb_path, usalign_path, parallel, par_index=None,
         if align_file is None:
             align_file = 'alignment_all.txt'
         align_file_path = os.path.join(align_folder_path, align_file)
+        if os.path.exists(align_file_path):
+            rm_cmd = 'rm ' + align_file_path
+            os.system(rm_cmd)
         usalign_cmd = usalign_path + ' -dir ' + pdb_path + ' ' + sublist_path + \
                       ' -outfmt 2 >> ' + align_file_path
         os.system(usalign_cmd)
@@ -160,9 +163,6 @@ def cat_align(pdb_path, usalign_path, par_index=None,
     if align_file is None:
         align_file = 'alignment_all.txt'
     align_all_path = os.path.join(align_folder_path, align_file)
-    if os.path.exists(align_all_path):
-        rm_cmd = 'rm ' + align_all_path
-        os.system(rm_cmd)
     # save it
     df_align_all.to_csv(align_all_path, index=None, sep='\t')
     return align_all_path
