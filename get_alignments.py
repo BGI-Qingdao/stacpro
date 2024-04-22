@@ -148,7 +148,7 @@ def cat_align(pdb_list, align_folder_path=None, align_file=None):
         Path of the final pair-wise similarity matrix.
     """
     # for each sub-alignments, concatenate it to the full alignments
-    for pdb_file in pdb_list[0]:
+    for pdb_file in pdb_list[0][:-1]:
         try:
             alignment2 = 'align_' + pdb_file[:-3] + 'txt'
             path2 = os.path.join(align_folder_path, alignment2)
