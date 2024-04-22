@@ -66,10 +66,10 @@ def generate_sub_lists(path, list_folder_path=None, par_num=None):
         list_folder = 'sublists'
         list_folder_path = os.path.join(prjfolder, list_folder)
         # if the folder for sub-lists is not present
-        if not os.path.exists(list_folder_path):
-            # then create it.
-            os.makedirs(list_folder_path)
-            print('Folder for sub-lists of pdb files does not exist, created!')
+    if not os.path.exists(list_folder_path):
+        # then create it.
+        os.makedirs(list_folder_path)
+        print('Folder for sub-lists of pdb files does not exist, created!')
     # get the list of all .pdb files, this is one of the outputs
     df_all, _ = get_pdblist_all(path)
     # copy of the overall list

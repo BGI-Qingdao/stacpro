@@ -1,18 +1,15 @@
-"""this is an example to run on 27.18.114.42"""
+"""this is an example to run on192.168.66.203"""
 """note: the protein IDs should not contain '(' or ')'"""
-import sys
+import os
 import get_lists
-import get_alignments
-import clustering.get_clusters
-import pandas as pd
-pdb_folder_path='/home/share/huadjyin/home/fanguangyi/wangdantong/projects/PETs/predictions_2928/pdbs'
-usalign_path='/home/share/huadjyin/home/fanguangyi/wangdantong/bin/USalign/USalign'
-pdb_list_path = '/home/share/huadjyin/home/fanguangyi/wangdantong/projects/PETs/predictions_2928/pdb_list.txt'
-sublist_path = '/home/share/huadjyin/home/fanguangyi/wangdantong/projects/PETs/predictions_2928/sublists'
-pdb_list = pd.read_csv(pdb_list_path, sep='\t', header=None)
+pdb_folder_path = '/dellfsqd2/ST_OCEAN/USER/wangdantong/python_toolbox_test/stacpro/pdb_files'
+usalign_path = '/dellfsqd2/ST_OCEAN/USER/wangdantong/toolboxes/usalign/USalign/USalign'
 parallel = 1
-align_all_path = '/home/share/huadjyin/home/fanguangyi/wangdantong/projects/PETs/predictions_2928/alignments/alignment_all.txt'
-pdb_list, pdb_list_path = get_lists.get_lists(pdb_folder_path, parallel=1, par_num=30)
-align_all_path = get_alignments.compute_similarity(pdb_folder_path, usalign_path, parallel=parallel,
-                                                   par_index=int(sys.argv[1]), par_num=30, pdb_list=pdb_list, sublist_path=sublist_path)
-clustering.get_clusters.get_tree_file(align_all_path)
+# define how many jobs you want to divide the alignment computation into.
+par_num = 30
+pdb_list, pdb_list_path = get_lists.get_lists(pdb_folder_path, parallel=parallel, par_num=par_num)
+print('Please use this path as the "sublist_path" input for the next step:')
+print(pdb_list_path)
+pdb_txt_path = os.path.join(pdb_list_path, 'pdb_list.txt')
+print('Please use this path as the "pdb_list_path" input for the next step:')
+print(pdb_txt_path)
