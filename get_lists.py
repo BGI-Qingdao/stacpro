@@ -83,7 +83,7 @@ def generate_sub_lists(path, list_folder_path=None, par_num=None):
     sub_pdb_list_size = int(np.floor(df_all.size/par_num))
     for ind_par_num in range(par_num):
         if ind_par_num == par_num - 1:
-            sub_df_all = df_all[ind_par_num * sub_pdb_list_size:]
+            sub_df_all = df_all[ind_par_num * sub_pdb_list_size:-1]
         else:
             sub_df_all = df_all[ind_par_num * sub_pdb_list_size:ind_par_num * sub_pdb_list_size + sub_pdb_list_size]
         par_list = 'pdb_list' + str(ind_par_num) + '.txt'
