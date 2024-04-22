@@ -3,7 +3,6 @@
 import os
 import get_lists
 pdb_folder_path = '/dellfsqd2/ST_OCEAN/USER/wangdantong/python_toolbox_test/stacpro/pdb_files'
-usalign_path = '/dellfsqd2/ST_OCEAN/USER/wangdantong/toolboxes/usalign/USalign/USalign'
 parallel = 1
 # define how many jobs you want to divide the alignment computation into.
 par_num = 30
