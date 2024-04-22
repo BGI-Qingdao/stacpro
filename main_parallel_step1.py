@@ -11,5 +11,5 @@ pdb_list, pdb_list_path = get_lists.get_lists(pdb_folder_path, parallel=parallel
 print('Please use this path as the "sublist_path" input for the next step:')
 print(pdb_list_path)
 pdb_txt_path = os.path.join(pdb_list_path, 'pdb_list.txt')
-print('Please use this path as the "pdb_list_path" input for the next step:')
+print('Please use this path as the "pdb_list_path" input for step2 and step3:')
 print(pdb_txt_path)

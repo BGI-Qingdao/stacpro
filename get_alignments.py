@@ -131,11 +131,10 @@ def run_usalign(pdb_path, usalign_path, parallel, par_index=None,
         os.system(usalign_cmd)
         # clean protein names and do sanity check of the alignment size
         clean_pro_name_in_align(align_file_path, size_align, parallel=parallel)
-    return pdb_list, align_folder_path, align_file_path
+    return align_folder_path, align_file_path
 
 
-def cat_align(pdb_path, usalign_path, par_index=None,
-                par_num=5, align_folder_path=None, align_file=None, pdb_list=None, sublist_path=None):
+def cat_align(pdb_list, align_folder_path=None, align_file=None):
     """If the alignments are computed parallelly, concatenate them.
     Parameters:
     ----------
@@ -192,12 +191,12 @@ def compute_similarity(pdb_path, usalign_path, parallel=0, par_index=None,
             print('The index of parallel is not specified, computing for par_index=0.')
             par_index = 0
         # get pdb_list and folder path of sub-alignments
-        pdb_list, align_folder_path, _ = run_usalign(pdb_path, usalign_path, 1, par_index=par_index,
+        align_folder_path, _ = run_usalign(pdb_path, usalign_path, 1, par_index=par_index,
                                                      par_num=par_num, align_folder_path=align_folder_path,
                                                      pdb_list=pdb_list, sublist_path=sublist_path)
     # in the similarity is not computed in parallel, simplly do us-align
     else:
-        _, _, align_all_path = run_usalign(pdb_path, usalign_path, 0, par_index=None,
+        _, align_all_path = run_usalign(pdb_path, usalign_path, 0, par_index=None,
                                            par_num=None, align_folder_path=align_folder_path,
                                            align_file=align_file, pdb_list=pdb_list, pdb_list_path=pdb_list_path)
     print('Pair-wise similarity computed, saved in: ', align_all_path)

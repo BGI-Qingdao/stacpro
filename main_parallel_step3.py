@@ -1,6 +1,14 @@
 """this is an example to run on 27.18.114.42"""
 """note: the protein IDs should not contain '(' or ')'"""
-"""this scrip is to be submitted in parallel to compute the similarity between all proteins"""
-import clustering.get_clusters
-align_all_path = '/home/share/huadjyin/home/fanguangyi/wangdantong/projects/PETs/predictions_2928/alignments/alignment_all.txt'
-clustering.get_clusters.get_tree_file(align_all_path)
+"""this scrip generates the nwk file for tree plot on itol website"""
+import pandas as pd
+import get_alignments
+# this inputs depend on the output of step 1
+pdb_list_path = '/home/share/huadjyin/home/fanguangyi/wangdantong/projects/PETs/predictions_2928/pdb_list.txt'
+align_folder_path = '/home/share/huadjyin/home/fanguangyi/wangdantong/projects/PETs/predictions_2928/alignments'
+
+pdb_list = pd.read_csv(pdb_list_path, sep='\t', header=None)
+align_all_path = get_alignments.cat_align(pdb_list, align_folder_path=align_folder_path)
+print('Please use this path as the "align_all_path" input for the next step:')
+print(align_all_path)
+
