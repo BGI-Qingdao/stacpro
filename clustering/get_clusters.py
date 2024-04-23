@@ -1,4 +1,5 @@
 import clustering.tree_functions as tree_functions
+import pandas as pd
 import os
 
 
@@ -124,16 +125,35 @@ def get_tree_file(path_similarity, method='nj', tm_score='average', path_tree_fo
     file_tree = open(save_tree_path, 'w')
     file_tree.write(name_distances[0])
     file_tree.close()
+    print('The nwk file for tree plot is saved in: ', save_tree_path)
 
     if plot:
         if method == 'upgma':
             fig_save_path = os.path.join(path_tree_folder, 'treeplot.png')
             fig, ax = tree_functions.plot_tree(clust_num, name_all, labels, distances)
             fig.savefig(fig_save_path)
-            return save_tree_path, fig_save_path, clust_save_path
         else:
             print('Sorry, we only support the printing of simple tree plot using UPGMA method, update'
                   'will come later, thank you for your understanding!')
-        return save_tree_path, clust_save_path
-    else:
-        return save_tree_path, clust_save_path
+
+    return labels, path_tree_folder
+
+
+def clustering_upward(labels, node_number_upward, path_tree_folder):
+    cluster_list = tree_functions.get_clusters(labels, node_number_upward)
+    if cluster_list[-1] == []:
+        cluster_list = cluster_list[:-1]
+    list_cluster = []
+    list_pro = []
+    for ind_cluster, i_cluster in enumerate(cluster_list):
+        num_cluster = ind_cluster
+        for pro_id in i_cluster:
+            list_cluster.append(num_cluster + 1)
+            list_pro.append(pro_id)
+    data_clusters = {'cluster_number': list_cluster, 'protein_ID': list_pro}
+    df_clusters = pd.DataFrame(data_clusters)
+    clusters_file = 'cluster_info.txt'
+    clusters_save_path = os.path.join(path_tree_folder, clusters_file)
+    df_clusters.to_csv(clusters_save_path, index=None, sep='\t')
+    print('The information of clusters is saved in: ', clusters_save_path)
+    return df_clusters

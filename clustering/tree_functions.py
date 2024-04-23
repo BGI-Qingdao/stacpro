@@ -723,3 +723,83 @@ def plot_tree(cluster_num, name_all, labels, distances, figsize=None):
     ax.set_xticks(range(len(xticklabels)))
     ax.set_xticklabels(xticklabels, rotation=60, fontsize=12)
     return fig, ax
+
+def get_num_before_pro(pro):
+    num = ''
+    for i_str in pro:
+        if i_str != 'p':
+            num = num + i_str
+        else:
+            break
+    proid = pro[len(num):]
+    return int(num), proid
+
+def get_pro_id_pre_layers(num_proid, layer_number_search, list4search, clust_list, ind_label, labels):
+    num_pro, pro_id = get_num_before_pro(num_proid)
+    pro_id_pre_layer = None
+    while pro_id != pro_id_pre_layer:
+        pre_layer_label = labels[layer_number_search]
+        if num_pro + 1 > len(pre_layer_label):
+            layer_number_search -= 1
+        else:
+            num_proid_pre_layer = pre_layer_label[num_pro][0]
+            layer_number_search -= 1
+            if num_proid_pre_layer[0] != 'p':
+                num_pre_layer, pro_id_pre_layer = get_num_before_pro(num_proid_pre_layer)
+            else:
+                pro_id_pre_layer = num_proid_pre_layer
+    list4search.pop(0)
+    pre_label = pre_layer_label[num_pro][0]
+    post_label = pre_layer_label[num_pro][1]
+    if pre_label[0] != 'p':
+        search_add = [pre_label, layer_number_search]
+        list4search.append(search_add)
+    else:
+        clust_list[ind_label].append(pre_label[1:])
+    if post_label[0] != 'p':
+        search_add = [post_label, layer_number_search]
+        list4search.append(search_add)
+    else:
+        clust_list[ind_label].append(post_label[1:])
+    labels[layer_number_search + 1][num_pro][0] = 'c'
+    return clust_list, list4search, labels
+
+
+def get_clusters(labels, node_number_upward):
+    if node_number_upward > len(labels):
+        print('The defined number of nodes is too large, please provide a number smaller than ', len(labels))
+    search_layer = node_number_upward - 1
+    ind_label = 0
+    while search_layer >= 0:
+        labels_node = labels[search_layer]
+
+        for i_label in labels_node:
+            if ind_label == 0 and search_layer == node_number_upward - 1:
+                clust_list = [[]]
+            elif clust_list[-1] == []:
+                ind_label = len(clust_list) - 1
+            else:
+                clust_list.append([])
+                ind_label = len(clust_list) - 1
+            list4search = []
+            layer_number = search_layer - 1
+            pre_label = i_label[0]
+            post_label = i_label[1]
+            if pre_label != 'c':
+                if pre_label[0] != 'p':
+                    search_add = [pre_label, layer_number]
+                    list4search.append(search_add)
+                else:
+                    clust_list[ind_label].append(pre_label[1:])
+                if post_label[0] != 'p':
+                    search_add = [post_label, layer_number]
+                    list4search.append(search_add)
+                else:
+                    clust_list[ind_label].append(post_label[1:])
+                while len(list4search) != 0:
+                    num_proid = list4search[0][0]
+                    layer_number_search = list4search[0][1]
+                    clust_list, list4search, labels = get_pro_id_pre_layers(num_proid, layer_number_search, list4search,
+                                                            clust_list, ind_label, labels)
+        search_layer -= 1
+    return clust_list
