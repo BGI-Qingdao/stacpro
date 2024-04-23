@@ -768,6 +768,7 @@ def get_pro_id_pre_layers(num_proid, layer_number_search, list4search, clust_lis
 def get_clusters(labels, node_number_upward):
     if node_number_upward > len(labels):
         print('The defined number of nodes is too large, please provide a number smaller than ', len(labels))
+        exit()
     search_layer = node_number_upward - 1
     ind_label = 0
     while search_layer >= 0:

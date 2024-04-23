@@ -157,3 +157,11 @@ def clustering_upward(labels, node_number_upward, path_tree_folder):
     df_clusters.to_csv(clusters_save_path, index=None, sep='\t')
     print('The information of clusters is saved in: ', clusters_save_path)
     return df_clusters
+
+def clustering_downward(labels, node_number_downward, path_tree_folder):
+    if node_number_downward > len(labels):
+        print('The defined number of nodes is too large, please provide a number smaller than ', len(labels))
+        exit()
+    node_number_upward = len(labels) - node_number_downward
+    df = clustering_upward(labels, node_number_upward, path_tree_folder)
+    return df
