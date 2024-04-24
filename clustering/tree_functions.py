@@ -739,7 +739,7 @@ def get_pro_id_pre_layers(num_proid, layer_number_search, list4search, clust_lis
     pro_id_pre_layer = None
     while pro_id != pro_id_pre_layer:
         pre_layer_label = labels[layer_number_search]
-        if num_pro + 1 > len(pre_layer_label):
+        if num_pro + 1 > len(pre_layer_label) or pre_layer_label[num_pro][0] == 'c':
             layer_number_search -= 1
         else:
             num_proid_pre_layer = pre_layer_label[num_pro][0]
@@ -802,5 +802,7 @@ def get_clusters(labels, node_number_upward):
                     layer_number_search = list4search[0][1]
                     clust_list, list4search, labels = get_pro_id_pre_layers(num_proid, layer_number_search, list4search,
                                                             clust_list, ind_label, labels)
+                    print(list4search)
+                    print(clust_list)
         search_layer -= 1
     return clust_list
