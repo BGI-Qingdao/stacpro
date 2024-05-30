@@ -152,13 +152,13 @@ def cat_align(pdb_list, align_folder_path=None, align_file=None):
         try:
             alignment2 = 'align_' + pdb_file[:-3] + 'txt'
             path2 = os.path.join(align_folder_path, alignment2)
-            df_2 = pd.read_csv(path2, sep='\t')
+            df_2 = pd.read_csv(path2, sep='\t', dtype=str)
             df_align_all = pd.concat([df_align_all, df_2])
         # initialize the full alignment dataframe
         except NameError:
             alignment1 = 'align_' + pdb_file[:-3] + 'txt'
             path1 = os.path.join(align_folder_path, alignment1)
-            df_align_all = pd.read_csv(path1, sep='\t')
+            df_align_all = pd.read_csv(path1, sep='\t', dtype=str)
     if align_file is None:
         align_file = 'alignment_all.txt'
     align_all_path = os.path.join(align_folder_path, align_file)
